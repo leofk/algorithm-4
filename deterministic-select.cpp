@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+using namespace std;
 
 /* 
 ** generateVector - this function fills a vector with random numbers
@@ -113,7 +114,7 @@ void print(const std::vector<type>& v)
 template<class type>
 int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    /* You need to implement this */
+    return 0;
 }
     
 /*
@@ -123,18 +124,53 @@ int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int 
 template<class type>
 int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    /* You need to implement this */
+    return 0;
 }
 
 /*
 ** Method runtests is really our main.
+ * Your runtests method/function should read in two parameters size and attempts, generate attempts
+ * random arrays of length size, and for each array find the median using both of the algorithms you
+ * need to implement. It should then print
+ *    • the average number of comparisons made over all attempts, and
+ *    • the worst-case number of comparisons made over all attempts.
 */
 void runtests() 
 {
-    /* You need to implement this */
+    cout << "------------------------------------------" << endl;
+    cout << "Size (int) : ";
+    int size;
+    cin >> size;
+    cout << "------------------------------------------" << endl;
+    cout << "Attempts (int) : ";
+    int attempts;
+    cin >> attempts;
+
+    int median = size/2;
+
+    for (int i = 0; i < attempts; i++) {
+        vector<int> v(size);
+        v = generateVector(size);
+
+        int rqsComparison = 0;
+        int q = randomizedQuickSelect(v, 0, size-1, median, rqsComparison);
+        assert(q == median)
+
+        int sComparison = 0;
+        int d = select(v, 0, size-1, median, sComparison);
+
+    }
+
+
+    cout << "------------------------------------------" << endl;
+    cout << "" << endl;
+    cout << "------------------------------------------" << endl;
 }
 
 int main()
 {
     runtests();
+
+//  to run program in shell
+//  g++ deterministic-select.cpp -o run
 }

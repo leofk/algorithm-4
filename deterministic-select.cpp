@@ -111,10 +111,40 @@ void print(const std::vector<type>& v)
 ** Randomized function to  find the kth  smallest element of  a vector. It
 ** returns the position in the vector where the element was found.
 */
+
+//        Choose pivot element p = A[1]
+//        Let Lesser b e an array of all elements from A less than p
+//        Let Greater b e an array of all elements from A greater than p
+//        if |Lesser| = k - 1 then
+//          return p
+//        else
+//          if |Lesser| > k - 1 then // all smaller elts are in Lesser; k is unchanged
+//              return QuickSelect(Lesser, k)
+//          else  // |Lesser| < k −1
+//              subtract from k the numb er of smaller elts removed
+//              return QuickSelect(Greater, k− |Lesser| −1)
+
 template<class type>
 int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    return 0;
+    if (last > 1) {
+
+        int pivot = rand() % (last - first);
+        int mid = partition(v, first, last, pivot, comparisons);
+        int sizeOfLesser = mid - 1;
+
+        if (sizeOfLesser == i-1) return mid;
+        else {
+            if (sizeOfLesser > i-1) {
+                return randomizedQuickSelect(v, first, mid-1, i, comparisons);
+            } else {
+                int k = i - sizeOfLesser - 1;
+                return randomizedQuickSelect(v, mid+1, last, k, comparisons);
+            }
+        }
+    } else {
+        return first;
+    }
 }
     
 /*
@@ -167,6 +197,16 @@ void runtests()
         if (dsCurr > dsWorst) dsWorst = dsCurr;
 
         assert(v[rqsOut] == v[dsOut]);
+
+        vector<int> sorted = generateVector(size);
+        insertionSort(sorted, 0, size-1, rqsCurr);
+        cout << "original: ";
+        print(v);
+        cout << "sorted: ";
+        print(sorted);
+        cout << "median RQS: " << v[rqsOut] << endl;
+        cout << "median actual: " << sorted[median] << endl;
+
     }
 
     int rqsAvg = rqsTotal / attempts;
@@ -186,7 +226,4 @@ void runtests()
 int main()
 {
     runtests();
-
-//  to run program in shell
-//  g++ deterministic-select.cpp -o run
 }

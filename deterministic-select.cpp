@@ -137,34 +137,50 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 */
 void runtests() 
 {
-    cout << "------------------------------------------" << endl;
-    cout << "Size (int) : ";
+    cout << endl;
+    cout << "Size: ";
     int size;
     cin >> size;
-    cout << "------------------------------------------" << endl;
-    cout << "Attempts (int) : ";
+    cout << "Attempts: ";
     int attempts;
     cin >> attempts;
 
     int median = size/2;
 
+    int rqsTotal;
+    int dsTotal;
+    int rqsWorst = 0;
+    int dsWorst = 0;
+
     for (int i = 0; i < attempts; i++) {
-        vector<int> v(size);
-        v = generateVector(size);
+        vector<int> v = generateVector(size);
 
-        int rqsComparison = 0;
-        int q = randomizedQuickSelect(v, 0, size-1, median, rqsComparison);
-        assert(q == median)
+        int rqsCurr = 0;
+        int dsCurr = 0;
 
-        int sComparison = 0;
-        int d = select(v, 0, size-1, median, sComparison);
+        int rqsOut = randomizedQuickSelect(v, 0, size-1, median, rqsCurr);
+        rqsTotal += rqsCurr;
+        if (rqsCurr > rqsWorst) rqsWorst = rqsCurr;
 
+        int dsOut = select(v, 0, size-1, median, dsCurr);
+        dsTotal += dsCurr;
+        if (dsCurr > dsWorst) dsWorst = dsCurr;
+
+        assert(v[rqsOut] == v[dsOut]);
     }
 
+    int rqsAvg = rqsTotal / attempts;
+    int dsAvg = dsTotal / attempts;
 
-    cout << "------------------------------------------" << endl;
-    cout << "" << endl;
-    cout << "------------------------------------------" << endl;
+    cout << endl;
+    cout << "--Results for Randomized Quick Select--" << endl;
+    cout << "Average Comparison: " << rqsAvg << endl;
+    cout << "Worst Comparison: " << rqsWorst << endl;
+    cout << endl;
+    cout << "--Results for Deterministic Select--" << endl;
+    cout << "Average Comparison: " << dsAvg << endl;
+    cout << "Worst Comparison: " << dsWorst << endl;
+    cout << endl;
 }
 
 int main()

@@ -128,8 +128,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 }
 
 /*
-** Method runtests is really our main.
- * Your runtests method/function should read in two parameters size and attempts, generate attempts
+ * runtests method/function should read in two parameters size and attempts, generate attempts
  * random arrays of length size, and for each array find the median using both of the algorithms you
  * need to implement. It should then print
  *    • the average number of comparisons made over all attempts, and

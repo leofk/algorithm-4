@@ -115,22 +115,26 @@ void print(const std::vector<type>& v)
 template<class type>
 int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    int size = last - first + 1;
+    //say size = 10, last should be 9, first should be 0
     if (last > 1) {
+        int size = last - first + 1;
 
-        int pivot = rand() % size;
+        int pivot = (rand() % size) + first +1 ;
+        pivot = partition(v, first, last, pivot, comparisons);
 
-        int mid = partition(v, first, last, pivot, comparisons);
-        int sizeOfLesser = mid - 1 - first + 1;
+        int sizeOfLesser = pivot - first;
 
         if (sizeOfLesser == i-1) {
+            // kth smallest is exactly at pivot
             return pivot;
         } else {
             if (sizeOfLesser > i-1) {
-                return randomizedQuickSelect(v, first, mid-1, i, comparisons);
+                // kth smallest is in left subproblem (or lesser)
+                return randomizedQuickSelect(v, first, pivot-1, i, comparisons);
             } else {
+                // kth smallest is in right subproblem (or greater)
                 int k = i - sizeOfLesser - 1;
-                return randomizedQuickSelect(v, mid+1, last, k, comparisons);
+                return randomizedQuickSelect(v, pivot+1, last, k, comparisons);
             }
         }
     } else {
@@ -171,23 +175,23 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         std::cout << "pivot " << pivot << std::endl;
         print(v);
 
-        int mid = partition(v, first, size-1, pivot, comparisons);
-        int sizeOfLesser = mid - 1 - first + 1;
+        pivot = partition(v, first, size-1, pivot, comparisons);
+        int sizeOfLesser = pivot - first;
 
         if (sizeOfLesser == i-1) {
             return pivot;
         } else {
             if (sizeOfLesser > i-1) {
-                return select(v, first, mid-1, i, comparisons);
+                return select(v, first, pivot-1, i, comparisons);
             } else {
                 std::cout << "lesser " << std::endl;
                 int k = i - sizeOfLesser - 1;
-                return select(v, mid+1, last, k, comparisons);
+                return select(v, pivot+1, last, k, comparisons);
             }
         }
     } else {
+        // this seems right
         std::cout << "less than 5" << std::endl;
-
         insertionSort(v, first, last, comparisons);
         return i-1;
     }
@@ -210,7 +214,8 @@ void runtests()
     int attempts;
     std::cin >> attempts;
 
-    int median = floor(size/2);
+    int median = size/2;
+      std::cout << "find " << median << "-th smallest" << std::endl;
 
     int rqsTotal = 0;
     int dsTotal = 0;
@@ -226,24 +231,27 @@ void runtests()
         int rqsOut = randomizedQuickSelect(v, 0, size-1, median, rqsCurr);
         rqsTotal += rqsCurr;
         if (rqsCurr > rqsWorst) rqsWorst = rqsCurr;
-        std::cout << "rqs done" << std::endl;
+//        std::cout << "rqs done" << std::endl;
 
-        int dsOut = select(v, 0, size-1, median, dsCurr);
+//        int dsOut = select(v, 0, size-1, median, dsCurr);
         dsTotal += dsCurr;
         if (dsCurr > dsWorst) dsWorst = dsCurr;
-        std::cout << "ds done" << std::endl;
+//        std::cout << "ds done" << std::endl;
 
 //        assert(v[rqsOut] == v[dsOut]);
 
         std::vector<int> sorted = v;
         int whocares = 0;
         insertionSort(sorted, 0, size-1, whocares);
+        std::cout << std::endl;
         std::cout << "original: ";
         print(v);
         std::cout << "sorted: ";
         print(sorted);
+        std::cout << std::endl;
+
         std::cout << "median RQS: " << v[rqsOut] << std::endl;
-        std::cout << "median DS: " << v[dsOut] << std::endl;
+//        std::cout << "median DS: " << v[dsOut] << std::endl;
         std::cout << "median Actual: " << sorted[size/2] << std::endl;
     }
 

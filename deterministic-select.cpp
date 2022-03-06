@@ -119,7 +119,12 @@ int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int 
     if (last > 1) {
         int size = last - first + 1;
 
-        int pivot = (rand() % size) + first +1 ;
+        int pivot = rand() % size; // random int in range size
+
+        // adjust for current subproblem
+        // not sure why +1, i think because position is 0 indexed and rank is 1 indexed
+        pivot += first + 1;
+
         pivot = partition(v, first, last, pivot, comparisons);
 
         int sizeOfLesser = pivot - first;

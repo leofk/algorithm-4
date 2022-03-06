@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <vector>
 #include <math.h>
-using namespace std;
 
 /* 
 ** generateVector - this function fills a vector with random numbers
@@ -118,7 +117,7 @@ int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int 
 {
     if (last > 1) {
 
-        int pivot = rand() % (last - first);
+        int pivot = rand() % (last - first + 1);
         int mid = partition(v, first, last, pivot, comparisons);
         int sizeOfLesser = mid - 1;
 
@@ -146,7 +145,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
     if (last >= 5) {
 
         int numGroups = floor(last / 5);
-        vector<int> medians(numGroups);
+        std::vector<int> medians(numGroups);
 
         for (int j = 0; j < numGroups; j++) {
             int currFirst = 5*j;
@@ -164,10 +163,10 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         if (sizeOfLesser == i-1) return mid;
         else {
             if (sizeOfLesser > i-1) {
-                return randomizedQuickSelect(v, first, mid-1, i, comparisons);
+                return select(v, first, mid-1, i, comparisons);
             } else {
                 int k = i - sizeOfLesser - 1;
-                return randomizedQuickSelect(v, mid+1, last, k, comparisons);
+                return select(v, mid+1, last, k, comparisons);
             }
         }
     } else {
@@ -185,13 +184,13 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 */
 void runtests() 
 {
-    cout << endl;
-    cout << "Size: ";
+    std::cout << std::endl;
+    std::cout << "Size: ";
     int size;
-    cin >> size;
-    cout << "Attempts: ";
+    std::cin >> size;
+    std::cout << "Attempts: ";
     int attempts;
-    cin >> attempts;
+    std::cin >> attempts;
 
     int median = size/2;
 
@@ -201,7 +200,7 @@ void runtests()
     int dsWorst = 0;
 
     for (int i = 0; i < attempts; i++) {
-        vector<int> v = generateVector(size);
+        std::vector<int> v = generateVector(size);
 
         int rqsCurr = 0;
         int dsCurr = 0;
@@ -216,29 +215,29 @@ void runtests()
 
         assert(v[rqsOut] == v[dsOut]);
 
-        vector<int> sorted = generateVector(size);
+        std::vector<int> sorted = generateVector(size);
         insertionSort(sorted, 0, size-1, rqsCurr);
-        cout << "original: ";
+        std::cout << "original: ";
         print(v);
-        cout << "sorted: ";
+        std::cout << "sorted: ";
         print(sorted);
-        cout << "median RQS: " << v[rqsOut] << endl;
-        cout << "median DS: " << v[dsOut] << endl;
-        cout << "median Actual: " << sorted[median] << endl;
+        std::cout << "median RQS: " << v[rqsOut] << std::endl;
+        std::cout << "median DS: " << v[dsOut] << std::endl;
+        std::cout << "median Actual: " << sorted[median] << std::endl;
     }
 
     int rqsAvg = rqsTotal / attempts;
     int dsAvg = dsTotal / attempts;
 
-    cout << endl;
-    cout << "--Results for Randomized Quick Select--" << endl;
-    cout << "Average Comparison: " << rqsAvg << endl;
-    cout << "Worst Comparison: " << rqsWorst << endl;
-    cout << endl;
-    cout << "--Results for Deterministic Select--" << endl;
-    cout << "Average Comparison: " << dsAvg << endl;
-    cout << "Worst Comparison: " << dsWorst << endl;
-    cout << endl;
+    std::cout << std::endl;
+    std::cout << "--Results for Randomized Quick Select--" << std::endl;
+    std::cout << "Average Comparison: " << rqsAvg << std::endl;
+    std::cout << "Worst Comparison: " << rqsWorst << std::endl;
+    std::cout << std::endl;
+    std::cout << "--Results for Deterministic Select--" << std::endl;
+    std::cout << "Average Comparison: " << dsAvg << std::endl;
+    std::cout << "Worst Comparison: " << dsWorst << std::endl;
+    std::cout << std::endl;
 }
 
 int main()

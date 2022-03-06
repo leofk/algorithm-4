@@ -7,4 +7,4 @@ To run in command line:
 - g++ deterministic-select.cpp -o run
 - ./run
 - Input _Size_ of randomly generated array
-- Input number of _Attempts_ (or iterations) to determine average / worst number of comparisons. 
+- Input number of _Attempts_ (or iterations) to determine average / worst number of comparisons

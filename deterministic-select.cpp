@@ -151,7 +151,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         std::cout << last << std::endl;
         std::cout << first << std::endl;
 
-        int numGroups = floor(size / 5);
+        int numGroups = size / 5;
         std::cout << "numgroups " << numGroups << std::endl;
 
         std::vector<int> medians(numGroups);
@@ -159,16 +159,19 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         for (int j = 0; j < numGroups; j++) {
             int currFirst = 5*j;
             int currLast = (5*j + 5) - 1;
+            print(v);
+
             insertionSort(v, currFirst, currLast, comparisons);
             int pos = 5*j + 2;
-            medians[i] = v[pos];
+            medians[j] = v[pos];
         }
 
-        insertionSort(medians, 0, numGroups-1, comparisons);
-        int pivot = medians[numGroups/2];
-//      int pivot = select(medians, 0, numGroups-1, floor(numGroups/2), comparisons);
+        int pivot = select(medians, 0, numGroups-1, numGroups/2, comparisons);
 
-        int mid = partition(v, first, last, pivot, comparisons);
+        std::cout << "pivot " << pivot << std::endl;
+        print(v);
+
+        int mid = partition(v, first, size-1, pivot, comparisons);
         int sizeOfLesser = mid - 1 - first + 1;
 
         if (sizeOfLesser == i-1) {
@@ -177,15 +180,16 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
             if (sizeOfLesser > i-1) {
                 return select(v, first, mid-1, i, comparisons);
             } else {
+                std::cout << "lesser " << std::endl;
                 int k = i - sizeOfLesser - 1;
                 return select(v, mid+1, last, k, comparisons);
             }
         }
     } else {
-        std::cout << "ccc" << std::endl;
+        std::cout << "less than 5" << std::endl;
 
         insertionSort(v, first, last, comparisons);
-        return i;
+        return i-1;
     }
 }
 
@@ -229,7 +233,7 @@ void runtests()
         if (dsCurr > dsWorst) dsWorst = dsCurr;
         std::cout << "ds done" << std::endl;
 
-        assert(v[rqsOut] == v[dsOut]);
+//        assert(v[rqsOut] == v[dsOut]);
 
         std::vector<int> sorted = v;
         int whocares = 0;
@@ -240,7 +244,7 @@ void runtests()
         print(sorted);
         std::cout << "median RQS: " << v[rqsOut] << std::endl;
         std::cout << "median DS: " << v[dsOut] << std::endl;
-        std::cout << "median Actual: " << sorted[floor(size/2)] << std::endl;
+        std::cout << "median Actual: " << sorted[size/2] << std::endl;
     }
 
     int rqsAvg = rqsTotal / attempts;

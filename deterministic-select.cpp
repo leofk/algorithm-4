@@ -158,7 +158,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         }
 
         int pivot = select(v, 0, numGroups-1, numGroups/2, comparisons);
-        pivot += first;
+        pivot += first ;  // TODO: maybe + 1? maybe not? sometimes out of bounds error.
         pivot = partition(v, first, last, pivot, comparisons);
 
         int sizeOfLesser = pivot - first;
@@ -219,8 +219,9 @@ void runtests()
         dsTotal += dsCurr;
         if (dsCurr > dsWorst) dsWorst = dsCurr;
 
-//        assert(v[rqsOut] == v[dsOut]);
+//        assert(v[rqsOut] == v[dsOut]); // TODO: uncomment this assert when done maybe??
 
+        // TODO: remove these debug tests when done
         std::vector<int> sorted = v;
         int whocares = 0;
         insertionSort(sorted, 0, size-1, whocares);

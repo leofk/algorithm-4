@@ -158,7 +158,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         }
 
         int pivot = select(v, 0, numGroups-1, numGroups/2, comparisons);
-        pivot += first + 1; // why +1??
+        pivot += first;
         pivot = partition(v, first, last, pivot, comparisons);
 
         int sizeOfLesser = pivot - first;
@@ -189,14 +189,14 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 void runtests() 
 {
     int size;
-    int attempts = 1000;
+    int attempts = 1; // TODO: CHANGE THIS TO 1000 WHEN COMPUTING RESULTS
 
     std::cout << std::endl;
     std::cout << "Size: ";
     std::cin >> size;
     assert(size != 0);
 
-    std::cout << "Attempts: 1000" << std::endl;
+    std::cout << "Attempts: 1" << std::endl; // TODO: CHANGE THIS TO 1000 WHEN COMPUTING RESULTS
     std::cout << std::endl;
 
     int k = size/2;
@@ -219,7 +219,23 @@ void runtests()
         dsTotal += dsCurr;
         if (dsCurr > dsWorst) dsWorst = dsCurr;
 
-        assert(v[rqsOut] == v[dsOut]);
+//        assert(v[rqsOut] == v[dsOut]);
+
+        std::vector<int> sorted = v;
+        int whocares = 0;
+        insertionSort(sorted, 0, size-1, whocares);
+        std::cout << std::endl;
+        std::cout << "original: ";
+        print(v);
+        std::cout << "sorted: ";
+        print(sorted);
+        std::cout << std::endl;
+
+        std::cout << "median RQS: " << v[rqsOut] << std::endl;
+        std::cout << "median DS: " << v[dsOut] << std::endl;
+        std::cout << "median Actual: " << sorted[k] << std::endl;
+        std::cout << std::endl;
+
     }
 
     int rqsAvg = rqsTotal / attempts;

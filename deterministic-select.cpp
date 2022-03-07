@@ -220,20 +220,6 @@ void runtests()
         if (dsCurr > dsWorst) dsWorst = dsCurr;
 
         assert(v[rqsOut] == v[dsOut]);
-//
-//        std::vector<int> sorted = v;
-//        int whocares = 0;
-//        insertionSort(sorted, 0, size-1, whocares);
-//        std::cout << std::endl;
-//        std::cout << "original: ";
-//        print(v);
-//        std::cout << "sorted: ";
-//        print(sorted);
-//        std::cout << std::endl;
-//
-//        std::cout << "median RQS: " << v[rqsOut] << std::endl;
-//        std::cout << "median DS: " << v[dsOut] << std::endl;
-//        std::cout << "median Actual: " << sorted[k - 1] << std::endl;
     }
 
     int rqsAvg = rqsTotal / attempts;

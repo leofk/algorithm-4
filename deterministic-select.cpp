@@ -118,8 +118,7 @@ int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int 
     if (last > 1) {
         int size = last - first + 1;
 
-        int pivot = rand() % size;
-        pivot += first + 1; // why + 1?
+        int pivot = (rand() % size) + first;
         pivot = partition(v, first, last, pivot, comparisons);
 
         int sizeOfLesser = pivot - first;
@@ -189,17 +188,18 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 */
 void runtests() 
 {
+    int size;
+    int attempts = 1000;
+
     std::cout << std::endl;
     std::cout << "Size: ";
-    int size;
     std::cin >> size;
-    std::cout << "Attempts: ";
-    int attempts;
-    std::cin >> attempts;
+    assert(size != 0);
 
-    int median = size/2;
-      std::cout << "find " << median << "-th smallest" << std::endl;
+    std::cout << "Attempts: 1000" << std::endl;
+    std::cout << std::endl;
 
+    int k = size/2;
     int rqsTotal = 0;
     int dsTotal = 0;
     int rqsWorst = 0;
@@ -211,42 +211,41 @@ void runtests()
         int rqsCurr = 0;
         int dsCurr = 0;
 
-        int rqsOut = randomizedQuickSelect(v, 0, size-1, median, rqsCurr);
+        int rqsOut = randomizedQuickSelect(v, 0, size-1, k, rqsCurr);
         rqsTotal += rqsCurr;
         if (rqsCurr > rqsWorst) rqsWorst = rqsCurr;
 
-        int dsOut = select(v, 0, size-1, median, dsCurr);
+        int dsOut = select(v, 0, size-1, k, dsCurr);
         dsTotal += dsCurr;
         if (dsCurr > dsWorst) dsWorst = dsCurr;
 
-//        assert(v[rqsOut] == v[dsOut]);
-
-        std::vector<int> sorted = v;
-        int whocares = 0;
-        insertionSort(sorted, 0, size-1, whocares);
-        std::cout << std::endl;
-        std::cout << "original: ";
-        print(v);
-        std::cout << "sorted: ";
-        print(sorted);
-        std::cout << std::endl;
-
-        std::cout << "median RQS: " << v[rqsOut] << std::endl;
-        std::cout << "median DS: " << v[dsOut] << std::endl;
-        std::cout << "median Actual: " << sorted[median] << std::endl;
+        assert(v[rqsOut] == v[dsOut]);
+//
+//        std::vector<int> sorted = v;
+//        int whocares = 0;
+//        insertionSort(sorted, 0, size-1, whocares);
+//        std::cout << std::endl;
+//        std::cout << "original: ";
+//        print(v);
+//        std::cout << "sorted: ";
+//        print(sorted);
+//        std::cout << std::endl;
+//
+//        std::cout << "median RQS: " << v[rqsOut] << std::endl;
+//        std::cout << "median DS: " << v[dsOut] << std::endl;
+//        std::cout << "median Actual: " << sorted[k - 1] << std::endl;
     }
 
     int rqsAvg = rqsTotal / attempts;
     int dsAvg = dsTotal / attempts;
 
+    std::cout << "--Results of Average Case Comparisons--" << std::endl;
+    std::cout << "Randomized: " << rqsAvg << std::endl;
+    std::cout << "Deterministic: " << dsAvg << std::endl;
     std::cout << std::endl;
-    std::cout << "--Results for Randomized Quick Select--" << std::endl;
-    std::cout << "Average Comparison: " << rqsAvg << std::endl;
-    std::cout << "Worst Comparison: " << rqsWorst << std::endl;
-    std::cout << std::endl;
-    std::cout << "--Results for Deterministic Select--" << std::endl;
-    std::cout << "Average Comparison: " << dsAvg << std::endl;
-    std::cout << "Worst Comparison: " << dsWorst << std::endl;
+    std::cout << "--Results of Worst Case Comparisons--" << std::endl;
+    std::cout << "Randomized: " << rqsWorst << std::endl;
+    std::cout << "Deterministic: " << dsWorst << std::endl;
     std::cout << std::endl;
 }
 

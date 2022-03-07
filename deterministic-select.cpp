@@ -115,29 +115,21 @@ void print(const std::vector<type>& v)
 template<class type>
 int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    //say size = 10, last should be 9, first should be 0
     if (last > 1) {
         int size = last - first + 1;
 
-        int pivot = rand() % size; // random int in range size
-
-        // adjust for current subproblem
-        // not sure why +1, i think because position is 0 indexed and rank is 1 indexed
-        pivot += first + 1;
-
+        int pivot = rand() % size;
+        pivot += first + 1; // why + 1?
         pivot = partition(v, first, last, pivot, comparisons);
 
         int sizeOfLesser = pivot - first;
 
         if (sizeOfLesser == i-1) {
-            // kth smallest is exactly at pivot
             return pivot;
         } else {
             if (sizeOfLesser > i-1) {
-                // kth smallest is in left subproblem (or lesser)
                 return randomizedQuickSelect(v, first, pivot-1, i, comparisons);
             } else {
-                // kth smallest is in right subproblem (or greater)
                 int k = i - sizeOfLesser - 1;
                 return randomizedQuickSelect(v, pivot+1, last, k, comparisons);
             }
@@ -154,49 +146,35 @@ int randomizedQuickSelect(std::vector<type>& v, int first, int last, int i, int 
 template<class type>
 int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
 {
-    int size = last - first + 1;
     if (last >= 5) {
-        std::cout << "yo" << std::endl;
-        std::cout << last << std::endl;
-        std::cout << first << std::endl;
-
+        int size = last - first + 1;
         int numGroups = size / 5;
-        std::cout << "numgroups " << numGroups << std::endl;
-
-        std::vector<int> medians(numGroups);
 
         for (int j = 0; j < numGroups; j++) {
             int currFirst = 5*j;
             int currLast = (5*j + 5) - 1;
-            print(v);
-
             insertionSort(v, currFirst, currLast, comparisons);
             int pos = 5*j + 2;
-            medians[j] = v[pos];
+            swap(v.at(j), v.at(pos));
         }
 
-        int pivot = select(medians, 0, numGroups-1, numGroups/2, comparisons);
+        int pivot = select(v, 0, numGroups-1, numGroups/2, comparisons);
+        pivot += first + 1; // why +1??
+        pivot = partition(v, first, last, pivot, comparisons);
 
-        std::cout << "pivot " << pivot << std::endl;
-        print(v);
-
-        pivot = partition(v, first, size-1, pivot, comparisons);
         int sizeOfLesser = pivot - first;
 
         if (sizeOfLesser == i-1) {
             return pivot;
         } else {
             if (sizeOfLesser > i-1) {
-                return select(v, first, pivot-1, i, comparisons);
+                return randomizedQuickSelect(v, first, pivot-1, i, comparisons);
             } else {
-                std::cout << "lesser " << std::endl;
                 int k = i - sizeOfLesser - 1;
-                return select(v, pivot+1, last, k, comparisons);
+                return randomizedQuickSelect(v, pivot+1, last, k, comparisons);
             }
         }
     } else {
-        // this seems right
-        std::cout << "less than 5" << std::endl;
         insertionSort(v, first, last, comparisons);
         return i-1;
     }
@@ -236,12 +214,10 @@ void runtests()
         int rqsOut = randomizedQuickSelect(v, 0, size-1, median, rqsCurr);
         rqsTotal += rqsCurr;
         if (rqsCurr > rqsWorst) rqsWorst = rqsCurr;
-//        std::cout << "rqs done" << std::endl;
 
-//        int dsOut = select(v, 0, size-1, median, dsCurr);
+        int dsOut = select(v, 0, size-1, median, dsCurr);
         dsTotal += dsCurr;
         if (dsCurr > dsWorst) dsWorst = dsCurr;
-//        std::cout << "ds done" << std::endl;
 
 //        assert(v[rqsOut] == v[dsOut]);
 
@@ -256,8 +232,8 @@ void runtests()
         std::cout << std::endl;
 
         std::cout << "median RQS: " << v[rqsOut] << std::endl;
-//        std::cout << "median DS: " << v[dsOut] << std::endl;
-        std::cout << "median Actual: " << sorted[size/2] << std::endl;
+        std::cout << "median DS: " << v[dsOut] << std::endl;
+        std::cout << "median Actual: " << sorted[median] << std::endl;
     }
 
     int rqsAvg = rqsTotal / attempts;

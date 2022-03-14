@@ -175,8 +175,7 @@ int select(std::vector<type>& v, int first, int last, int i, int &comparisons)
         }
     } else {
         insertionSort(v, first, last, comparisons);
-        if (last <= 1) return i;
-        return i-1;
+        return first + i - 1;
     }
 }
 
